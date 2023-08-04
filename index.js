@@ -9,6 +9,19 @@ function checkData(data) {
   // Якщо об'єкт не пустий повертаємо дані
   // Інакше створюємо помилку,в якості тексту помилки ми використовуємо рядок "Об'єкт пустий".
   // Якщо виникла помилка, повертаємо її повідомлення.
+  try {
+    if (typeof data === "object") {
+       if (Object.keys(data).length > 0) {
+          return data;
+       } else return "Обєкт пустий";
+    } else {
+       const error = new TypeError("Аргумент не є обєктом");
+       throw error;
+    }
+ } catch (err) {
+    console.log(err);
+    return false;
+ };
 }
 
 console.log("Завдання: 1 ==============================");
@@ -30,6 +43,12 @@ function parseJson(jsonStr) {
   // Якщо рядок має невірний формат, виникне помилка, яку ми обробляємо у блоку catch.
   // Повертаємо отриманий об'єкт
   // Якщо виникла помилка, повертаємо її повідомлення.
+  try {
+    let str = JSON.parse(jsonStr);
+    return str;
+ } catch (error) {
+    return error.message;
+ };
 }
 console.log("Завдання: 2 ==============================");
 
@@ -60,6 +79,16 @@ function getAge(age) {
   // Викидаємо помилку
   // Якщо помилки не має повертаємо рядок `Вік користувача: ${age}`
   // Якщо виникла помилка, повертаємо об'єкт з name та message помилки.
+  try {
+    if (age < 0) {
+       const err = new Error("Вік не може бути менше 0!");
+       err.name = "AgeError";
+       throw err;
+    };
+    return `Вік користувача: ${age}`;
+ } catch (err) {
+    return { error: err.message, name: err.name };
+ };
 }
 console.log("Завдання: 3 ==============================");
 
@@ -79,6 +108,17 @@ console.log(getAge(20));
  *  id - ID книги.
  */
 function getBookById(books, id) {
+  try {
+  let book = books.filter((obj) => obj.id === id);
+  if (book.length <= 0) {
+     const err = new TypeError(`Книга з ID ${id} не знайдена!`);
+     throw err;
+  }
+  let res = book[0].title;
+  return `Книга: ${res}`;
+  } catch (error) {
+  return error.message;
+};
   // Спроба знайти книгу по ID та записати в змінну book.
   // Якщо книга не знайдена, генерується TypeError з повідомленням Книга з ID ${id} не знайдена!.
   // Повертаємо book
@@ -119,6 +159,13 @@ console.log(
  *  encodedString - Рядок для декодування.
  */
 function decodeURIComponentWrapper(encodedString) {
+  try {
+    const decodURI = decodeURIComponent(encodedString);
+    return decodURI;
+  } catch (err) {
+    const error = new Error("Помилка декодування URI");
+    return error.message;
+  }
   // Спроба декодувати рядок
   // Повертаємо декодований рядок
   // Якщо виникла помилка, і ії назва дорівнює URIError повертаємо помилку про неправильний URI формат з повідомленням Помилка декодування URI,
@@ -144,6 +191,24 @@ function findEvenNumber(numbers) {
   // Якщо число знайдено повертаємо його
   // Виводимо текстове представлення помилки.
   // Незалежно від результату, виводимо вихідний масив.
+  let evenNumber;
+  console.log(numbers);
+  try {
+     for (const val of numbers) {
+        if (val % 2 === 0) {
+           evenNumber = val;
+           return val;
+        }
+     };
+     if (evenNumber == undefined) {
+        const error = new Error(
+           "у масиві немає чисел, що діляться на 2 без остачі!"
+        );
+        throw error;
+     }
+  } catch (error) {
+     return error.message;
+  }
 }
 
 console.log("Завдання: 6 ==============================");
@@ -170,6 +235,29 @@ function validateUser(user) {
   // Перевіряємо, чи існує email користувача,якщо ні викидуємо помилку з повідомленням "Email користувача не вказано!", а як причину вказуємо об'єкт user.
   // Якщо всі перевірки пройдено успішно виводимо повідомлення "Об'єкт користувача відповідає всім вимогам."
   // Виводимо повідомлення про помилку та причину помилки.
+  try {
+    if (typeof user === "object") {
+       if ("name" in user) {
+          if ("email" in user) {
+             console.log("Об'єкт користувача відповідає всім вимогам.");
+             return user;
+          } else {
+             throw new Error("Email користувача не вказано!", {
+                cause: user,
+             });
+          }
+       } else {
+          throw new Error("Ім'я користувача не вказано!", {
+             cause: user,
+          });
+       }
+    } else {
+       throw new Error("Об'єкт користувача не вказано!");
+    }
+ } catch (error) {
+    console.log(error.message, error.cause);
+    // return user;
+ }
 }
 
 console.log("Завдання: 7 ==============================");
@@ -192,6 +280,17 @@ function calculateSquareRoot(number) {
   // Перевіряємо, чи число не від'ємне, якщо ні викидуємо помилку про тип недопустимий діапазон з повідомленням Число не повинно бути від'ємним!".
   // Повертаємо корінь квадратний з вхідного значення
   // Повертаємо повідомлення про помилку.
+  try {
+    if (typeof number !== "number") {
+       throw new TypeError("Аргумент має бути числом!");
+    }
+    if (number < 0) {
+       throw new RangeError("Число не повинно бути від'ємним!");
+    }
+    return Math.sqrt(number);
+ } catch (error) {
+    return error.message;
+ }
 }
 
 console.log("Завдання: 8 ==============================");
@@ -212,6 +311,17 @@ console.log(calculateSquareRoot("abc"));
  *  data - Масив чисел для обробки.
  */
 function processData(data) {
+  try {
+    data.forEach((element, index) => {
+      if (typeof element !== "number") {
+        throw new Error(`Елемент з індексом ${index} має бути числом!`);
+      }
+    });
+    return "Дані успішно оброблені";
+  } catch (err) {
+    // console.log(err.stack);
+    return err.message;
+ }
   // Для кожного елемента в масиві
   // Перевіряємо, чи елемент є числом
   // Якщо елемент не є числом, кидаємо помилку невірного типу даних з повідомленням `Елемент з індексом ${index} має бути числом!`
@@ -239,6 +349,12 @@ console.log(processData([1, "two", 3]));
  *  expression - Математичний вираз у вигляді рядка.
  */
 function evaluateExpression(expression) {
+  try {
+    return eval(expression);
+  } catch (error) {
+      const err = new EvalError("hello is not defined");
+      console.log(err);
+  }
   // Повертаємо результат розрахунку
   // Якщо була виявлена помилка повертаємо помилку при виконанні функції eval
 }
